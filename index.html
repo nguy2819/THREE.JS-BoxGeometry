@@ -11,6 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js" integrity="sha512-LF8ZB1iTwi4Qvkm4pekHG4a437Y9Af5ZuwbnW4GTbAWQeR2E4KW8WF+xH8b9psevV7wIlDMx1MH9YfPqgKhA/Q==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 
+    <h1>Three.JS Blocks</h1>
+    <button role="link">Check My Portfolio</button>
+
     <script>
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -33,9 +36,9 @@
         const mouse = new THREE.Vector2();
 
         const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshLambertMaterial({color: 0xFFCC00});
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add( mesh );
+        const material = new THREE.MeshLambertMaterial({color: 0x8A255F});
+        // const mesh = new THREE.Mesh(geometry, material);
+        // scene.add( mesh );
 
         // mesh.position.x = -2;
         // mesh.position.y = 2;
@@ -44,10 +47,25 @@
 
         // mesh.rotation.set(45, 0, 0);
         // mesh.scale.set(1, 2, 1);
+        
+        meshX = -10;
+        for (var i=0; i<15; i++){
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.x = (Math.random() - 0.5) *10;
+            mesh.position.y = (Math.random() - 0.5) *10;
+            mesh.position.z = (Math.random() - 0.5) *10;
+            scene.add( mesh );
 
-        const light = new THREE.PointLight(0xFFFFFF, 1, 500);
-        light.position.set(10,0,25);
+            meshX+=1;
+        }
+
+        const light = new THREE.PointLight(0xEC407D, 1, 1000);
+        light.position.set(0,0,0);
         scene.add( light );
+
+        const light2 = new THREE.PointLight(0xEF9CB6, 2, 1000);
+        light2.position.set(0,0,25);
+        scene.add( light2 );
 
         const render = function() {
             requestAnimationFrame(render);
@@ -59,18 +77,46 @@
             renderer.render(scene, camera);
         }
 
+        function onMouseMove(event){
+            event.preventDefault();
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects( scene.children, true );
+            for (var i=0; i< intersects.length; i++) {
+                // GSAP Timeline
+                // var tl = gsap.timeline({delay: .3});
+                var tl = gsap.timeline();
+                tl.to(intersects[i].object.scale, 1, {x: 2, ease: Expo.easeOut})
+                tl.to(intersects[i].object.scale, .5, {x: .5, ease: Expo.easeOut})
+                tl.to(intersects[i].object.position, .5, {x: 2, ease: Expo.easeOut})
+                tl.to(intersects[i].object.rotation, .5, {y: Math.PI*.5, ease: Expo.easeOut}, "=-1.5")
+                intersects[i].object.material.color.set(0x8C548C)
+            }
+        }
+
         render();
 
-        // GSAP Timeline
-        // var tl = gsap.timeline({delay: .3});
-        var tl = gsap.timeline({paused: true});
-        tl.to(mesh.scale, 1, {x: 2, ease: Expo.easeOut})
-        tl.to(mesh.scale, .5, {x: .5, ease: Expo.easeOut})
-        tl.to(mesh.position, .5, {x: 2, ease: Expo.easeOut})
-        tl.to(mesh.rotation, .5, {y: Math.PI*.5, ease: Expo.easeOut}, "=-1.5")
+        window.addEventListener('mousemove', onMouseMove);
 
-        document.body.addEventListener('click', () => {
-            tl.play();
+        const btn = document.querySelector('button')
+        var tl = gsap.timeline({defaults: {ease: 'power2.inOut'}})
+        tl.pause()
+
+        tl.to(meshX, {width: 0, opacity: 0})
+        tl.to('html, body, button', {
+            background: 'white',
+            onComplete: () => {
+                window.location.href = 'https://portfolio-2021-tienborland.vercel.app/'
+            }
+        })
+
+        console.log(btn);
+        btn.addEventListener('click', () => {
+            tl.play()
         })
     </script>
 </body>

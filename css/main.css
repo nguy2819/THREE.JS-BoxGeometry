@@ -6,3 +6,38 @@ body {
 canvas {
     display: block;
 }
+
+h1 {
+    position: absolute;
+    top: 2em;
+    left: 2em;
+    font-family: 'Poppins';
+    font-size: 7em;
+    text-transform: uppercase;
+    width: auto;
+    line-height: .8em;
+    border: 5px solid black;
+    padding: .2em;
+}
+
+button {
+    position: absolute;
+    background: none;
+    border: 3px dashed black;
+    top: 35em;
+    left: 40em;
+    padding: 2em;
+    text-transform: uppercase;
+    color: black;
+    width: auto;
+    font-weight: bold;
+    letter-spacing: .3em;
+    font-size: .9rem;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+button:hover {
+        background: #75dddd;
+        color: black;
+    }
